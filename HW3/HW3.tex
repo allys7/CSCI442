@@ -1,0 +1,197 @@
+\documentclass[11pt,largemargins]{homework}
+\usepackage{amsmath}
+
+% TODO: replace these with your information
+\newcommand{\hwname}{Ally Smith}
+\newcommand{\hwemail}{Section A}
+\newcommand{\hwtype}{Homework}
+\newcommand{\hwnum}{3}
+\newcommand{\hwclass}{CSCI442}
+\newcommand{\hwlecture}{}
+\newcommand{\hwsection}{A}
+
+\begin{document}
+\maketitle
+
+% Your content
+\question{Consider the following code:}
+
+\begin{verbatim}
+    char buf[100];
+    int fd0 = open(“foo.txt”, O_RDONLY);
+    int fd1 = open(“bar.txt”, O_WRONLY | O_CREAT | O_APPEND,
+                    0666)
+    printf(“Hola!\n”);
+    dup2(fd1, STDOUT_FILENO);
+    printf(“Como estas?\n”)
+    dup2(fd0, STDIN_FILENO);
+    for (;;) {
+        ssize_t bytes_read = read(STDIN_FILENO,
+                                buf, sizeof(buf));
+        if (bytes_read == 0)
+            return 0;
+        ssize_t bytes_to_write = bytes_read;
+        while (bytes_to_write > 0)
+            bytes_to_write -= write(STDOUT_FILENO,
+                buf + bytes_read – bytes_to_write,
+                bytes_to_write);
+    }
+    \end{verbatim}
+
+The program is invoked like so:
+
+\begin{verbatim}
+    $ cat foo.txt
+    Muy bien!
+    $ cat bar.txt
+    Buenos dias!
+    $ ./a.out
+    \end{verbatim}
+
+\begin{alphaparts}
+    \questionpart{What was printed on standard output?}
+    \begin{verbatim}
+    Hola!
+    Buenos dias!
+    Como estas?
+    Muy bien!
+    \end{verbatim}
+
+    \questionpart{What does foo.txt contain?}
+    \begin{verbatim}
+    Muy bien!
+    \end{verbatim}
+
+    \questionpart{What does bar.txt contain?}
+    \begin{verbatim}
+    Buenos dias!
+    \end{verbatim}
+\end{alphaparts}
+\clearpage
+
+\question{Consider the following code:}
+
+\begin{verbatim}
+    int pipefd[2];
+    pipe(pipefd);
+\end{verbatim}
+
+Assume that the operating system assigns the file descriptor \texttt{3} for the
+read end of the pipe, and the file descriptor \texttt{4} for the write end of
+the pipe.
+
+\begin{alphaparts}
+    \questionpart{What is \texttt{pipefd[0]} after this operation is
+        performed?}
+
+    \texttt{3}
+
+    \questionpart{What is \texttt{pipefd[1]} after this operation is
+        performed?}
+
+    \texttt{4}
+
+\end{alphaparts}
+\clearpage
+
+\question{The following state transition table is a simplified model of process
+    management, with the labels representing transitions between states of
+    \texttt{READY}, \texttt{RUN}, \texttt{BLOCKED}, and \texttt{NONRESIDENT}.}
+
+\begin{tabular}{|c|c|c|c|c|}\hline %chktex 44
+    $\tfrac{to}{from}$ & \textbf{READY} & \textbf{RUN} & \textbf{BLOCKED} &
+    \textbf{NONRESIDENT}
+    \\\hline %chktex 44
+    READY              & --             & 1            & --               & 5
+    %chktex 8
+    \\\hline %chktex 44
+    RUN                & 2              & --           & 3                & --
+    %chktex 8
+    \\\hline %chktex 44
+    BLOCKED            & 4              & --           & --               & 6
+    %chktex 8
+    \\\hline %chktex 44
+\end{tabular}
+
+\begin{arabicparts}
+    \questionpart{\texttt{READY} $\Rightarrow$ \texttt{RUN}}
+
+    A process could go through this transition if it is the next process in
+    line to be executed by the operating system.
+
+    \questionpart{\texttt{RUN} $\Rightarrow$ \texttt{READY}}
+
+    This transition could occur if a process times out.
+
+    \questionpart{\texttt{RUN} $\Rightarrow$ \texttt{BLOCKED}}
+
+    This transition could occur if a process has to wait for an I/O
+    operation.
+
+    \questionpart{\texttt{BLOCKED} $\Rightarrow$ \texttt{READY}}
+
+    A process could go through this transition if an I/O event occurs that
+    a process was waiting on.
+
+    \questionpart{\texttt{READY} $\Rightarrow$ \texttt{NONRESIDENT}}
+
+    A process could go through this transition if it is suspended into
+    secondary memory.
+
+    \questionpart{\texttt{BLOCKED} $\Rightarrow$ \texttt{NONRESIDENT}}
+
+    A process could go through this transition if it is suspended into
+    secondary memory.
+\end{arabicparts}
+\clearpage
+
+\question{Assume that at time 5 no system resources are being used except for
+    the processor and memory. Now consider the following events:}
+
+\begin{tabular}{r l}
+    T5:  & P1 executes a command to read from disk unit 3.               \\
+    T15: & P3's time slice expires.                                      \\
+    T18: & P4 executes a command to write to disk unit 3.                \\
+    T20: & P2 executes a command to read from disk unit 2.               \\
+    T24: & P3 executes a command to write to disk unit 3.                \\
+    T28: & P3 is swapped out.                                            \\
+    T33: & An interrupt occurs from disk unit 2: P2's read is complete.  \\
+    T36: & An interrupt occurs from disk unit 3: P1's read is complete.  \\
+    T38: & P5 terminates.                                                \\
+    T40: & An interrupt occurs from disk unit 3: P3's write is complete. \\
+    T44: & P3 is swapped back in.                                        \\
+    T48: & An interrupt occurs from disk unit 3: P4's write is complete. \\
+\end{tabular}
+
+For each time 25, 35, and 45, identify which state (or possible states)
+each process is in. If a process is
+blocked, further identify the event on which it is blocked.
+
+\vspace{.5in}
+\begin{tabular}{|c|c|c|c|}\hline %chktex 44
+        & Time 25               & Time 35               & Time
+    45
+    \\\hline %chktex 44
+
+    P1 & \texttt{BLOCKED}, DU3 & \texttt{BLOCKED}, DU3
+        & \texttt{READY}
+    \\\hline %chktex 44
+
+    P2 & \texttt{BLOCKED}, DU2 & \texttt{READY}
+        & \texttt{READY}
+    \\\hline %chktex 44
+
+    P3 & \texttt{BLOCKED}, DU3 & \texttt{NONRESIDENT}  &
+    \texttt{NONRESIDENT}
+    \\\hline %chktex 44
+
+    P4 & \texttt{BLOCKED}, DU3 & \texttt{BLOCKED}, DU3 &
+    \texttt{BLOCKED}, DU3
+    \\\hline %chktex 44
+
+    P5 & \texttt{RUN}          & \texttt{RUN}          &
+    \texttt{EXIT}
+    \\\hline %chktex 44
+\end{tabular}
+
+\end{document}
