@@ -19,7 +19,7 @@
     compilers and the correctness of code, as this problem illustrates.
     Consider the following declarations and function definition:}
 
-    \begin{verbatim}
+\begin{verbatim}
     int global_positives = 0;
     typedef struct list {
         struct list *next;
@@ -34,24 +34,32 @@
     }
     \end{verbatim}
 
-    Now consider the case in which threads A executes \texttt{count\_positives(<list
-    containing only negative values>)} while thread B executes \texttt{++global\_
-    positives}.
+Now consider the case in which threads A executes
+\code{count\_positives(<listcontaining only negative values>)}
+while thread B executes \code{++global\_positives}.
 
-    \begin{alphaparts}
-        \questionpart{What does the function do?}
+\begin{alphaparts}
+    \questionpart{What does the function do?}
 
-        \questionpart{The C language only addresses single-threaded execution.
+    The function loops through the provided linked list, and counts the
+    number of positive elements in the list.
+
+    \questionpart{The C language only addresses single-threaded execution.
         Does the use of two parallel threads create any problems or potential
         problems?}
-    \end{alphaparts}
 
-    \clearpage
-    \question{Some existing optimizing compilers (including gcc, which tends
-    to be relatively conservative) will `optimize' count\_positives to something
+    Once \code{count\_positives} finishes running, \code{global\_positives} may
+    have a value other than the number of positive numbers in the linked list,
+    causing unexpected behavior.
+\end{alphaparts}
+
+\clearpage
+\question{Some existing optimizing compilers (including gcc, which tends
+    to be relatively conservative) will `optimize' count\_positives to
+    something
     similar to the following:}
 
-    \begin{verbatim}
+\begin{verbatim}
         void count_positives(list l) { 
             list p; 
             register int r; 
@@ -62,22 +70,35 @@
         }
     \end{verbatim}
 
-    What problem or potential problems occurs with this compiled version of the
-    program if threads A and B are executed concurrently?
+What problem or potential problems occurs with this compiled version of the
+program if threads A and B are executed concurrently?
 
-    \clearpage
-    \question{In the discussion of ULTs versus KLTs, it was pointed out that a
+If thread B starts and finishes after thread A, then the
+\code{global\_positives} will be incremented.
+However, if thread A starts before thread B, then thread B will not be able to
+increment since \code{global\_positives} since it will be reassigned from the
+register.
+
+\clearpage
+\question{In the discussion of ULTs versus KLTs, it was pointed out that a
     disadvantage of ULTs is that when a ULT executes a system call, not only is
     that thread blocked, but also all of the threads within the process are
     blocked. Why is that so?}
-    
-    
-    \clearpage
-    \question{Consider an environment in which there is a one-to-one mapping
+
+This happens because, a lot of the time, system calls are blocking calls,
+which means when the OS gets a syscall, it must block the whole process since
+it doesn't recognize user-level threads.
+
+\clearpage
+\question{Consider an environment in which there is a one-to-one mapping
     between user-level threads and kernel-level threads that allows one or more
     threads within a process to issue blocking system calls while other threads
     continue to run. Explain why this model can make multi-threaded programs
     run faster than their single-threaded counterparts on a uni-processor
     computer.}
+
+This would allow for multi-threaded programs to make blocking syscalls that don't
+block their entire process, and instead just block that single thread. This would
+allow for other threads to run as the scheduler sees fit.
 
 \end{document}
