@@ -1,0 +1,53 @@
+\documentclass[11pt,largemargins]{homework}
+
+% TODO: replace these with your information
+\newcommand{\hwname}{Ally Smith}
+\newcommand{\hwemail}{Section B}
+\newcommand{\hwtype}{Homework}
+\newcommand{\hwnum}{6}
+\newcommand{\hwclass}{}
+\newcommand{\hwlecture}{}
+\newcommand{\hwsection}{}
+
+\usepackage{enumitem} % format enumarate items
+\begin{document}
+\maketitle
+
+\question{Suppose that we have a multiprogrammed computer in which each job has
+identical characteristics. In one computation period $T$ for a job, half the
+time is spent in I/O and the other half in processor activity. Each job runs for
+a total of $N$ periods. Assume that a simple round-robin scheduling is used, and
+that I/O operations can overlap with processor operation. Define the following
+quantities:}
+\begin{itemize}[noitemsep,topsep=0pt]
+    \item Turnaround time = actual time to complete a job
+    \item Throughput = average number of jobs completed per time period $T$
+    \item Processor utilization = percentage of time that the processor is
+    active (not waiting)
+\end{itemize}
+Compute these quantities for one, two, and four simultaneous jobs, assuming that
+the period $T$ is distributed in the following way: I/O first half, processor
+second half.
+
+\clearpage
+\question{Consider the following workload:}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}\hline
+    \textbf{Process} & \textbf{Burst Time} & \textbf{Arrival Time} \\\hline
+    $P_1$ & 10 ms & 0 ms \\\hline
+    $P_2$ & 20 ms & 5 ms \\\hline
+    $P_3$ & 50 ms & 10 ms \\\hline
+    $P_4$ & 30 ms & 15 ms \\\hline
+    $P_5$ & 10 ms & 16 ms \\\hline
+\end{tabular}
+\end{center}
+Show the schedule using Shortest Remaining Time, Round Robin with time quantum
+of 10 ms, and Round Robin with time quantum of 20 ms. In addition, for each
+algorithm, state the turnaround and response times for each process.
+
+\clearpage
+\question{Which type of process is generally favored by a multi-level feedback
+queueing scheduler --- a process-bound process or an I/O-bound process? Briefly
+explain why.}
+\end{document}
