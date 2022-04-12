@@ -9,7 +9,7 @@
 \newcommand{\hwlecture}{}
 \newcommand{\hwsection}{}
 
-\usepackage{enumitem} % format enumarate items
+\usepackage{enumitem} % format enumerate items
 \begin{document}
 \maketitle
 
@@ -29,6 +29,45 @@ Compute these quantities for one, two, and four simultaneous jobs, assuming that
 the period $T$ is distributed in the following way: I/O first half, processor
 second half.
 
+\begin{alphaparts}
+\questionpart \textbf{One process}\\
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        \textbf{CPU} &    &    & P1 & P1 &    &    & P1 & P1 & \ldots\\\hline
+        \textbf{I/O} & P1 & P1 &    &    & P1 & P1 &    &    & \ldots\\\hline
+    \end{tabular}
+    
+    Turnaround time: $N$
+
+    Throughput: $\frac{N}{T}$
+
+    Utilization: $50\%$
+
+\questionpart \textbf{Two processes}\\
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        \textbf{CPU} & P2 & P2 & P1 & P1 & P2 & P2 & P1 & P1 & \ldots\\\hline
+        \textbf{I/O} & P1 & P1 & P2 & P2 & P1 & P1 & P2 & P2 & \ldots\\\hline
+    \end{tabular}
+
+    Turnaround time: $N$
+
+    Throughput: $\frac{N}{T}$
+
+    Utilization: $100\%$
+
+\setlength{\tabcolsep}{2.3pt}
+\questionpart \textbf{Four processes}\\
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        \textbf{CPU} & P4 & P4 & P1 & P1 & P2 & P2 & P3 & P3 & P4 & P4 & P1 & P1 & P2 & P2 & P3 & P3 & \ldots\\\hline
+        \textbf{I/O} & P1 & P1 & P2 & P2 & P3 & P3 & P4 & P4 & P1 & P1 & P2 & P2 & P3 & P3 & P4 & P4 & \ldots\\\hline
+    \end{tabular}
+
+    Turnaround time: $2N$
+
+    Throughput: $\frac{N}{T}$
+
+    Utilization: $100\%$
+\end{alphaparts}
+
 \clearpage
 \question{Consider the following workload:}
 
@@ -46,8 +85,73 @@ Show the schedule using Shortest Remaining Time, Round Robin with time quantum
 of 10 ms, and Round Robin with time quantum of 20 ms. In addition, for each
 algorithm, state the turnaround and response times for each process.
 
+
+\textbf{Shortest Remaining Time}
+
+\begin{tabular}{|c|c|c|c|}\hline
+    \textbf{Time} & \textbf{Occurrence} & \textbf{Running} & \textbf{Queue} \\\hline
+    0 & $P_1$ starts & $P_1$ & \\\hline
+    5 & $P_2$ arrives & $P_1$ & $P_2$ \\\hline
+    10 & $P_1$ finishes & $P_2$ & \\\hline
+    10 & $P_3$ arrives & $P_2$ & $P_3$ \\\hline
+    15 & $P_4$ arrives & $P_2$ & $P_4, P_3$ \\\hline
+    16 & $P_5$ arrives & $P_5$ & $P_2, P_4, P_3$ \\\hline
+    26 & $P_5$ finishes & $P_2$ & $P_4, P_3$ \\\hline
+    40 & $P_2$ finishes & $P_4$ & $P_3$ \\\hline
+    70 & $P_4$ finishes & $P_3$ & \\\hline
+    120 & $P_3$ finishes & & \\\hline
+\end{tabular}
+
+\clearpage
+\textbf{Round Robin} - TS 10 ms
+
+\begin{tabular}{|c|c|c|c|}\hline
+    \textbf{Time} & \textbf{Occurrence} & \textbf{Running} & \textbf{Queue} \\\hline
+    0 & $P_1$ starts & $P_1$ & \\\hline
+    5 & $P_2$ arrives & $P_1$ & $P_2$ \\\hline
+    10 & $P_1$ finishes & $P_2$ & \\\hline
+    10 & $P_3$ arrives & $P_2$ & $P_3$ \\\hline
+    15 & $P_4$ arrives & $P_2$ & $P_3, P_4$ \\\hline
+    16 & $P_5$ arrives & $P_2$ & $P_3, P_4, P_5$ \\\hline
+    20 & $P_2$ expires & $P_3$ & $P_4, P_5, P_2$ \\\hline
+    30 & $P_3$ expires & $P_4$ & $P_5, P_2, P_3$ \\\hline
+    40 & $P_4$ expires & $P_5$ & $P_2, P_3, P_4$ \\\hline
+    50 & $P_5$ finishes & $P_2$ & $P_3, P_4$ \\\hline
+    60 & $P_2$ finishes & $P_3$ & $P_4$ \\\hline
+    70 & $P_3$ expires & $P_4$ & $P_3$ \\\hline
+    80 & $P_2$ finishes & $P_3$ & $P_4$ \\\hline
+    90 & $P_3$ expires & $P_4$ & $P_3$ \\\hline
+    100 & $P_4$ finishes & $P_3$ & \\\hline
+    110 & $P_3$ expires & $P_3$ & \\\hline
+    120 & $P_3$ finishes & & \\\hline
+\end{tabular}
+
+% \clearpage
+\textbf{Round Robin} - TS 20 ms
+
+\begin{tabular}{|c|c|c|c|}\hline
+    \textbf{Time} & \textbf{Occurrence} & \textbf{Running} & \textbf{Queue} \\\hline
+    0 & $P_1$ starts & $P_1$ & \\\hline
+    5 & $P_2$ arrives & $P_1$ & $P_2$ \\\hline
+    10 & $P_1$ finishes & $P_2$ & \\\hline
+    10 & $P_3$ arrives & $P_2$ & $P_3$ \\\hline
+    15 & $P_4$ arrives & $P_2$ & $P_3, P_4$ \\\hline
+    16 & $P_5$ arrives & $P_2$ & $P_3, P_4, P_5$ \\\hline
+    30 & $P_2$ finishes & $P_3$ & $P_4, P_5$ \\\hline
+    50 & $P_3$ expires & $P_4$ & $P_5, P_3$ \\\hline
+    70 & $P_4$ expires & $P_5$ & $P_3, P_4$ \\\hline
+    80 & $P_5$ finishes & $P_3$ & $P_4$ \\\hline
+    100 & $P_3$ expires & $P_4$ & $P_3$ \\\hline
+    110 & $P_4$ finishes & $P_3$ & \\\hline
+    120 & $P_3$ finishes & & \\\hline 
+\end{tabular}
+
 \clearpage
 \question{Which type of process is generally favored by a multi-level feedback
 queueing scheduler --- a process-bound process or an I/O-bound process? Briefly
 explain why.}
+
+An I/O-bound process is favored by an MLFQ scheduling algorithm, as CPU-bound
+processes are moved down in priority, while I/O-bound processes are moved to a
+higher queue.
 \end{document}
